@@ -1,0 +1,52 @@
+name: habit_tracker_app
+description: "Track daily habits with streak logic"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5+1
+  shared_preferences: ^2.5.3
+  table_calendar: ^3.2.0
+  intl: ^0.20.2
+  fl_chart: ^1.1.1
+  firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
+
+dev_dependencies:
+  flutter_native_splash: ^2.3.10
+  flutter_launcher_icons: ^0.13.1
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/icon.png"
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: "assets/icons/icon.png"
+  branding: "assets/icons/icon.png"
+  android: true
+  ios: true
+
+  android_12:
+    image: "assets/icons/icon.png"
+    icon_background_color: "#FFFFFF"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/icon.png
