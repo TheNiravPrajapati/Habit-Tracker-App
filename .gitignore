@@ -1,47 +1,95 @@
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+# ============================
+# Flutter & Dart
+# ============================
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
 .dart_tool/
+.flutter-plugins
 .flutter-plugins-dependencies
+.packages
 .pub-cache/
 .pub/
-/build/
-/coverage/
+build/
+coverage/
+generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-/android/app/google-services.json
-/lib/firebase_options.dart
+# ============================
+# Firebase & Secrets
+# ============================
+
+# Android Firebase config
+android/app/google-services.json
+
+# iOS Firebase config
+ios/Runner/GoogleService-Info.plist
+
+# FlutterFire config (auto-generated)
+lib/firebase_options.dart
+
+# ============================
+# Android
+# ============================
+
+**/android/local.properties
+**/android/app/debug
+**/android/app/profile
+**/android/app/release
+
+# Gradle cache
+.gradle/
+**/build/
+
+# ============================
+# iOS / macOS
+# ============================
+
+ios/Flutter/.last_build_id
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+macos/Pods/
+macos/.symlinks/
+macos/Flutter/Flutter.framework
+macos/Flutter/Flutter.podspec
+
+# Xcode user-specific files
+*.xcworkspace
+*.xcuserstate
+*.xcodeproj/*
+!*project.pbxproj
+!default.pbxuser
+!default.perspectivev3
+
+DerivedData/
+
+# ============================
+# VS Code / Android Studio / IntelliJ
+# ============================
+
+# VS Code settings
+.vscode/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ============================
+# System Files
+# ============================
+
+.DS_Store
+*.log
+*.swp
+*.class
+*.pyc
+atom/
+.history/
+.svn/
+.swiftpm/
+migrate_working_dir/
