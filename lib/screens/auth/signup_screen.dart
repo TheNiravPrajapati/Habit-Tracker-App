@@ -10,134 +10,153 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _formKey = GlobalKey<FormState>();
-
   final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
 
-  String? errorMessage;
+  bool loading = false;
+  String? errorText;
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Account")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text("Create Account"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
+      ),
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(28),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                // ---------------- LOGO ----------------
-                Image.asset("assets/icons/icon.png", width: 100),
-                const SizedBox(height: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Column(
+            children: [
 
-                Text(
-                  "Get Started",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 20),
+              /// LOGO
+              Image.asset(
+                "assets/icons/icon.png",
+                width: 110,
+                height: 110,
+              ),
 
-                // ---------------- NAME FIELD ----------------
-                TextFormField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    labelText: "Full Name",
-                    prefixIcon: const Icon(Icons.person),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return "Name required";
-                    if (val.length < 3) return "Enter valid name";
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-                // ---------------- EMAIL FIELD ----------------
-                TextFormField(
-                  controller: email,
-                  decoration: InputDecoration(
-                    labelText: "Email Address",
-                    prefixIcon: const Icon(Icons.email),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return "Email required";
-                    if (!val.contains("@") || !val.contains(".")) {
-                      return "Enter a valid email";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+              Text("Let's get started!",
+                  style: theme.textTheme.headlineSmall!
+                      .copyWith(fontWeight: FontWeight.bold)),
 
-                // ---------------- PASSWORD FIELD ----------------
-                TextFormField(
-                  controller: password,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    prefixIcon: const Icon(Icons.lock),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-                  validator: (val) {
-                    if (val == null || val.isEmpty) return "Password required";
-                    if (val.length < 6) return "Minimum 6 characters";
-                    return null;
-                  },
-                ),
+              const SizedBox(height: 32),
 
-                const SizedBox(height: 16),
+              _glassField(
+                controller: name,
+                hint: "Full Name",
+                icon: Icons.person_outline,
+              ),
 
-                if (errorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      errorMessage!,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                  ),
+              const SizedBox(height: 15),
 
-                // ---------------- SIGNUP BUTTON ----------------
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        final error = await auth.signUp(
-                          name.text.trim(),
-                          email.text.trim(),
-                          password.text.trim(),
-                        );
+              _glassField(
+                controller: email,
+                hint: "Email",
+                icon: Icons.email_outlined,
+              ),
 
-                        if (error == null) {
-                          Navigator.pushReplacementNamed(context, "/home");
-                        } else {
-                          setState(() => errorMessage = error);
-                        }
-                      }
-                    },
-                    child: const Text("Sign Up"),
-                  ),
-                )
-              ],
-            ),
+              const SizedBox(height: 15),
+
+              _glassField(
+                controller: password,
+                hint: "Password",
+                obscure: true,
+                icon: Icons.lock_outline,
+              ),
+
+              const SizedBox(height: 15),
+
+              if (errorText != null)
+                Text(errorText!, style: const TextStyle(color: Colors.red)),
+
+              const SizedBox(height: 20),
+
+              _primaryButton(
+                text: loading ? "Creating..." : "Sign Up",
+                onTap: loading ? null : _signup,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _signup() async {
+    setState(() {
+      loading = true;
+      errorText = null;
+    });
+
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+
+    final error = await auth.signUp(
+      name.text.trim(),
+      email.text.trim(),
+      password.text.trim(),
+    );
+
+    if (error != null) {
+      setState(() {
+        errorText = error;
+        loading = false;
+      });
+    } else {
+      Navigator.pushReplacementNamed(context, "/home");
+    }
+  }
+
+  Widget _glassField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    bool obscure = false,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.teal.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: obscure,
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, color: Colors.teal),
+          hintText: hint,
+          border: InputBorder.none,
+          contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _primaryButton({required String text, required VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF1ABC9C), Color(0xFF16A085)],
+          ),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
       ),
